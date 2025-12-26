@@ -1,0 +1,38 @@
+ALGORITHM: Generate and Output Fibonacci Numbers
+MEMORY VARIABLES:
+  x ($00) = first fibonacci number
+  y ($01) = second fibonacci number
+  z ($02) = sum/result
+  pointer ($03) = index for storing results
+  final_list_size ($04) = count of generated numbers
+  fib_list ($10+) = array to store fibonacci sequence
+PROCEDURE:
+  // Başlat
+  x ← 0
+  y ← 1
+  z ← 0
+  pointer ← 0
+  // Fibonacci sayılarını üretimi
+  LOOP:
+    z ← x + y                      // Bir sonraki fibonacci'yi hesapla
+    IF (z overflowed/carry set):
+      GOTO EXIT                    // Sonuç 255'i aşarsa dur
+    
+    x ← y                          // Kaydırma: x, y'nin değerini alır
+    y ← z                          // Kaydırma: y, z'nin değerini alır
+    fib_list[pointer] ← z          // Z'yi diziye kaydet
+    pointer ← pointer + 1          // Bir sonraki dizi konumuna geç
+    GOTO LOOP                      // Tekrar et
+  // Çıkış ve sonuçları çıktı olarak gönder
+  EXIT:
+    final_list_size ← pointer      // Oluşturulan sayıların sayısını kaydet
+    index ← 0
+    OUTPUT_LOOP:
+      IF (index == final_list_size):
+        GOTO DONE                  // Tüm sayılar çıktıya verildi
+      
+      output_port ← fib_list[index]  // Sayıyı çıkış portu $6000'a gönder
+      index ← index + 1            // Sonraki sayı
+      GOTO OUTPUT_LOOP             // Tekrar et
+  DONE:
+    HALT
